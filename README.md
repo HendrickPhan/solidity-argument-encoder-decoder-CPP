@@ -1,1 +1,8 @@
-g++ -o ./main ./main.cpp
+# Build
+```
+rm -rf build/
+mkdir build
+cd build
+cmake ..
+make
+```
