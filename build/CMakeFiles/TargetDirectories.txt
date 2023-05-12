@@ -1,0 +1,3 @@
+/Users/hieuphandinhminh/Desktop/Repo/C++/abi_parser/build/CMakeFiles/main.dir
+/Users/hieuphandinhminh/Desktop/Repo/C++/abi_parser/build/CMakeFiles/edit_cache.dir
+/Users/hieuphandinhminh/Desktop/Repo/C++/abi_parser/build/CMakeFiles/rebuild_cache.dir
