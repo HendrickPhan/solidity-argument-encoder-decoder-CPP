@@ -84,7 +84,7 @@ json parseElement(const uint8_t* bytes, uint32_t* i, json abi);
 
 json parseString(const uint8_t* bytes, uint32_t* i, json abi) {
     json result = json::object();
-    // cout << "DB String1:  " << bytesToHexString(bytes, 64)  << " i:" << *i << endl;
+     cout << "DB String1:  " << bytesToHexString(bytes, 64)  << " i:" << *i << endl;
     // Read the offset and length of the string
 
     uint32_t offset = 0;
@@ -92,36 +92,48 @@ json parseString(const uint8_t* bytes, uint32_t* i, json abi) {
         offset <<= 8;
         offset |= bytes[*i + j];
     }
-    // cout << "DB String Off set:  " << offset << endl;
+     cout << "DB String Off set:  " << offset << endl;
     uint32_t length = 0;
     for (int j = 0; j < 32; j++) {
         length <<= 8;
         length |= bytes[offset + j];
     }
-    // cout << "DB String lengtth: " << bytesToHexString(bytes + offset, 32) << endl;
+     cout << "DB String lengtth: " << bytesToHexString(bytes + offset, 32) << endl;
     const uint8_t* string_bytes = bytes + offset + 32; // 32 bytes for string length
     std::string element_str(string_bytes, string_bytes + length);
-    // cout << "DB String: " << offset << ":" << length << ":"<< bytesToHexString(string_bytes, length) << endl;
+    cout << "DB String: " << offset << ":" << length << ":"<< bytesToHexString(string_bytes, length) << endl;
     *i += 32;
+    cout << "DB String result1: " << element_str << endl;
+   
+    // Find the position of the NUL character
+    size_t pos = element_str.find('\0');
+
+    // Replace the NUL character with the escaped representation
+    while (pos != std::string::npos) {
+        element_str.replace(pos, 1, "");
+        pos = element_str.find('\0', pos);
+    }
+
     result = json::parse("\"" + element_str + "\"");
+    cout << "DB String result2: " << result << endl;
     return result;
 }
 
 json parseTuple(const uint8_t* bytes, uint32_t* i, json abi) {
-    // cout << "DB parseTuple: " <<  abi << endl;
+     cout << "DB parseTuple: " <<  abi << endl;
     json result = json::object();
     for (const auto& tuple_element : abi["components"]) {
         result[std::string(tuple_element["name"])] = parseElement(bytes, i, tuple_element);
-        // cout << "DB parseTuple pushing key: " <<  std::string(abi["name"]) << " Value: " << result[std::string(tuple_element["name"])] << endl;
+         cout << "DB parseTuple pushing key: " <<  std::string(abi["name"]) << " Value: " << result[std::string(tuple_element["name"])] << endl;
     }
     return result;
 }
 
 std::vector<json> parseArray(const uint8_t* bytes, uint32_t* i, json abi) {
-    // cout << "DB array: " <<  abi << endl;
+     cout << "DB array: " <<  abi << endl;
     std::vector<json> rs;
     uint32_t array_len = getArrayLength(abi["type"]);
-    // cout << "DB parseArray: " <<  array_len << endl;
+     cout << "DB parseArray: " <<  array_len << endl;
 
     json newAbi;
     newAbi["name"] = abi["name"];
@@ -131,16 +143,16 @@ std::vector<json> parseArray(const uint8_t* bytes, uint32_t* i, json abi) {
     for (uint32_t j = 0; j < array_len; j++) {
         json elem = parseElement(bytes, i, newAbi);
         rs.push_back(elem);
-        // cout << "DB parseArray pushing key: " <<  std::string(abi["name"]) << " Value: " << elem << endl;
-        // cout << "DB parseArray RS: " <<  rs << endl;
-        // cout << "DB parseArray ABI: " <<  abi << endl;
+         cout << "DB parseArray pushing key: " <<  std::string(abi["name"]) << " Value: " << elem << endl;
+         cout << "DB parseArray RS: " <<  rs << endl;
+         cout << "DB parseArray ABI: " <<  abi << endl;
     }
 
     return rs;
 }
 
 std::vector<json> parseSlice(const uint8_t* bytes, uint32_t* i, json abi) {
-    // cout << "DB parseSlice: " <<  abi << endl;
+     cout << "DB parseSlice: " <<  abi << endl;
     std::vector<json> rs;
     uint32_t offset = 0;
     for (int j = 0; j < 32; j++) {
@@ -154,7 +166,7 @@ std::vector<json> parseSlice(const uint8_t* bytes, uint32_t* i, json abi) {
         array_len <<= 8;
         array_len |= bytes[offset + j];
     }
-    // cout << "DB parseSlice: " <<  array_len << endl;
+     cout << "DB parseSlice: " <<  array_len << endl;
 
     json newAbi;
     newAbi["name"] = abi["name"];
@@ -166,9 +178,9 @@ std::vector<json> parseSlice(const uint8_t* bytes, uint32_t* i, json abi) {
     for (uint32_t j = 0; j < array_len; j++) {
         json elem = parseElement(slice_bytes, &aI, newAbi);
         rs.push_back(elem);
-        // cout << "DB parseSlice pushing  Value: " << elem << endl;
+         cout << "DB parseSlice pushing  Value: " << elem << endl;
     }
-    // cout << "aI: " << aI << endl;
+     cout << "aI: " << aI << endl;
 
     return rs;
 }
@@ -177,14 +189,14 @@ json parseInt(const uint8_t* bytes, uint32_t* i, json abi) {
     const uint8_t* element_bytes = bytes + *i;
     json result = json::object();
     result = bytesToHexString(element_bytes, 32);
-    // cout << "DB parseInt:  " << bytesToHexString(element_bytes, 32) << endl;
+     cout << "DB parseInt:  " << bytesToHexString(element_bytes, 32) << endl;
     *i += 32;
 
     return result;
 }
 
 json parseElement(const uint8_t* bytes, uint32_t* i, json abi) {
-    // cout << "I: " << *i << endl;
+     cout << "I: " << *i << endl;
     SolidityType t = getType(abi);
     json result = json::object();
     if (t == SliceTy) {
@@ -202,7 +214,7 @@ json parseElement(const uint8_t* bytes, uint32_t* i, json abi) {
     if (t == IntTy) {
         result =  parseInt(bytes, i, abi);
     }
-    // cout << t << "result" << result.dump() << endl;
+     cout << t << "result" << result.dump() << endl;
     return result;
 }
 
