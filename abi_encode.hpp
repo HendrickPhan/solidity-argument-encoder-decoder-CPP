@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2023 hieuphanuit
+ *   All rights reserved.
+ */
 #pragma once
 #include "abi_utilities.hpp"
 

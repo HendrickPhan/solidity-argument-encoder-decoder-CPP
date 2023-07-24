@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2023 hieuphanuit
+ *   All rights reserved.
+ */
 #include "abi_decode.hpp"
 #include "abi_encode.hpp"
 
