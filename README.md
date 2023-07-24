@@ -31,6 +31,6 @@ contract ExampleContract {
 II. Đào sâu vào cơ chế
 1. Các kiểu dữ liệu trong soldity
 2. Cách encode hoạt động
-3. Các decode hoạt động
+3. Cách decode hoạt động
    
 III. Tự xây dựng encode và decode
