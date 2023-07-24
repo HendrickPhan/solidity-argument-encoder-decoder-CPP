@@ -185,6 +185,9 @@ vector<uint8_t> hexStringToUint8Array(const string& hexStr) {
     if (processedHexStr.substr(0, 2) == "0x") {
         processedHexStr = processedHexStr.substr(2);
     }
+    if (processedHexStr.length() % 2 == 1) {
+        processedHexStr = "0" + processedHexStr;
+    }
     cout << "hexStringToUint8Array: " << processedHexStr << endl;
     vector<uint8_t> result;
     result.reserve(processedHexStr.size() / 2);
