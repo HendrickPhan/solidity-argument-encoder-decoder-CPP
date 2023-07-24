@@ -91,7 +91,6 @@ SolidityType getType(json element) {
     if (posInt != string::npos) {
         return IntTy;
     }
-    // default is IntTy, i dont check orther type cuz all of them is encode to 32 byte so just return IntTy
     return IntTy;
 }
 

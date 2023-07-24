@@ -124,13 +124,14 @@ vector<json> decodeSlice(const uint8_t* bytes, uint32_t i, json abi) {
         offset <<= 8;
         offset |= bytes[i + j];
     }
+    cout << "DB slice offset: " <<  offset << endl;
 
     uint32_t array_len = 0;
     for (int j = 0; j < 32; j++) {
         array_len <<= 8;
         array_len |= bytes[offset + j];
     }
-     cout << "DB decodeSlice: " <<  array_len << endl;
+    cout << "DB decodeSlice: " <<  array_len << endl;
 
     json newAbi;
     newAbi["name"] = abi["name"];
@@ -139,6 +140,7 @@ vector<json> decodeSlice(const uint8_t* bytes, uint32_t i, json abi) {
     uint32_t aI = 0;
 
     const uint8_t* slice_bytes = bytes + offset + 32;
+    cout << "DEBUG: " << bytesToHexString(slice_bytes, 32)  << endl;
     for (uint32_t j = 0; j < array_len; j++) {
         json elem = decodeElement(slice_bytes, aI, newAbi);
         rs.push_back(elem);
@@ -176,12 +178,21 @@ json decodeAddress(const uint8_t* bytes, uint32_t i, json abi) {
 }
 
 json decodeBytes(const uint8_t* bytes, uint32_t i, json abi) {
+    cout << "BYTES DATA" << bytesToHexString(bytes + i, 32) << endl;
+    uint32_t offset = 0;
+    for (int j = 0; j < 32; j++) {
+        offset <<= 8;
+        offset |= bytes[i + j];
+    }
+    cout << "BYTES  offset: " << offset << endl;
+
     uint32_t length = 0;
     for (int j = 0; j < 32; j++) {
         length <<= 8;
-        length |= bytes[i + j];
+        length |= bytes[offset + j];
     }
-    const uint8_t* element_bytes = bytes + i + 32; // 32 for length
+    cout << "BYTES LENGTH: " << length << endl;
+    const uint8_t* element_bytes = bytes + offset + 32; // 32 for length
     json result = bytesToHexString(element_bytes, length);
     return result;
 }

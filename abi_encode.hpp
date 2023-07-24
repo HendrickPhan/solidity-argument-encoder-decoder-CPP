@@ -239,11 +239,11 @@ vector<uint8_t> encodeArgument(json abi, string argument)  {
         return encodeString(argument);
     }
     // Static
-    if (t == BytesTy || t == FixedBytesTy) {
+    if (t == BytesTy) {
         return encodeBytesSlice(argument);
     }
 
-    if (t == IntTy || t== UintTy) {
+    if (t == IntTy || t== UintTy || t == FixedBytesTy) {
         return encodeInt(argument);
     }
 
